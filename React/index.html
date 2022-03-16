@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>TicTacToe with React</title>
+
+    <!-- Load React. -->
+    <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
+    <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+
+    <!-- Using Babel for JSX support. -->
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+    <!-- Load our React component. -->
+    <script src="helper.js"></script>
+    <script src="square.js" type="text/babel"></script>
+    <script src="board.js" type="text/babel"></script>
+    <script src="tictactoe.js" type="text/babel"></script>
+
+    <link rel="stylesheet" href="global.css">
+
+  </head>
+  <body>
+    <!-- We will put our React component inside this div. -->
+    <div id="root"></div>    
+  </body>
+</html>
