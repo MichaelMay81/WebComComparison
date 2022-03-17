@@ -1,7 +1,36 @@
 import {Square} from "./square.js";
-import {calculateWinner} from "./helper.js"
 
 export class Board extends HTMLElement {
+    constructor() {
+        super();
+        this.squares = Array(9).fill("");
+        this.handleclick = null
+    }
+
+    // == html attributes ==
+
+    static get observedAttributes() {
+        return ['squares'];
+    }
+
+    attributeChangedCallback(property, oldValue, newValue) {
+        if (oldValue === newValue) return;
+
+        if (property == "squares") {
+            this[ property ] = JSON.parse(newValue);
+            this.render();
+        }
+    }
+
+    // == class properties ==
+
+    set handleClick(value) {
+        this.handleclick = value;
+        this.render();
+    }
+
+    // == html rendering ==
+
     renderSquare(i) {
         return `
             <Square-World
@@ -10,15 +39,8 @@ export class Board extends HTMLElement {
     }
 
     render() {
-        const winner = calculateWinner(this.squares);
-        const status =
-            winner
-            ? `Winner: ${winner}`
-            : `Next player: ${this.xIsNext ? 'X' : 'O'}`;
-
         this.innerHTML = `
             <div>
-                <div class="status">${status}</div>
                 <div class="board-row">
                     ${this.renderSquare(0)}
                     ${this.renderSquare(1)}
@@ -38,22 +60,7 @@ export class Board extends HTMLElement {
         `
         const squares = this.getElementsByTagName("Square-World");
         for (let i=0; i<squares.length; i++)
-            squares.item(i).handleClick = () => this.handleClick(i); // console.log(this.tagName);
-    }
-
-    handleClick(i) {
-        if (calculateWinner(this.squares) || this.squares[i])
-            return
-
-        this.squares[i] = this.xIsNext ? "X" : "O";
-        this.xIsNext = ! this.xIsNext;
-        this.render();
-    }
-    
-    constructor() {
-        super();
-        this.squares = Array(9).fill("");
-        this.xIsNext = true;
+            squares.item(i).handleClick = () => this.handleclick(i);
     }
 
     connectedCallback() {
