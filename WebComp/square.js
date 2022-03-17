@@ -5,16 +5,27 @@ export class Square extends HTMLElement {
         this.handleclick = null
     }
 
+    // == html attributes ==
+
     static get observedAttributes() {
-        return ['value', 'handleclick'];
+        return ['value'];
     }
 
     attributeChangedCallback(property, oldValue, newValue) {
         if (oldValue === newValue) return;
-        
+
         this[ property ] = newValue;
         this.render();
     }
+
+    // == class properties ==
+
+    set handleClick(value) {
+        this.handleclick = value;
+        this.render();
+    }
+
+    // == html rendering ==
 
     connectedCallback() {
         this.render();
@@ -22,10 +33,15 @@ export class Square extends HTMLElement {
 
     render() {
         this.innerHTML = `
-            <button class="square" onclick="${this.handleclick}">
+            <button class="square">
                 ${this.value}
             </button>
         `
+        if (this.handleclick)
+            this
+            .getElementsByClassName("square")
+            .item(0)
+            .onclick = this.handleclick;
     }
 }
 

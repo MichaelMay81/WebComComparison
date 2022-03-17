@@ -5,8 +5,7 @@ export class Board extends HTMLElement {
     renderSquare(i) {
         return `
             <Square-World
-                value = "${this.squares[i]}"
-                handleClick = "this.parentElement.parentElement.parentElement.parentElement.handleClick(${i})">
+                value = "${this.squares[i]}">
             </Square-World>`;
     }
 
@@ -37,6 +36,9 @@ export class Board extends HTMLElement {
                 </div>
             </div>
         `
+        const squares = this.getElementsByTagName("Square-World");
+        for (let i=0; i<squares.length; i++)
+            squares.item(i).handleClick = () => this.handleClick(i); // console.log(this.tagName);
     }
 
     handleClick(i) {
