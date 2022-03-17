@@ -8,16 +8,32 @@ class Game extends HTMLElement {
             squares: Array(9).fill("")
         }];
         this.xIsNext = true;
+        this.stepNumber = 0;
     }
 
     handleClick(i) {
-        const current = this.history[this.history.length - 1];
-
+        const history = this.history.slice(0, this.stepNumber + 1);
+        const current = history[history.length - 1];
+        
         if (calculateWinner(current.squares) || current.squares[i])
             return
 
-        current.squares[i] = this.xIsNext ? "X" : "O";
+        const squares = current.squares.slice();
+        squares[i] = this.xIsNext ? "X" : "O";
+
+        this.history = history.concat([{
+            squares: squares
+        }])
         this.xIsNext = ! this.xIsNext;
+        this.stepNumber = history.length;
+
+        this.render();
+    }
+
+    jumpTo(step) {
+        this.stepNumber = step;
+        this.xIsNext = (step % 2) === 0;
+
         this.render();
     }
 
@@ -28,12 +44,29 @@ class Game extends HTMLElement {
     }
 
     render() {
-        const current = this.history[this.history.length - 1];
+        const current = this.history[this.stepNumber];
         const winner = calculateWinner(current.squares);
         const status =
             winner
             ? `Winner: ${winner}`
             : `Next player: ${this.xIsNext ? 'X' : 'O'}`;
+
+        const moves = 
+            this
+            .history
+            .map((step, move) => {
+                const desc = move
+                    ? 'Go to move #' + move
+                    : 'Go to game start';
+                return `
+                    <li>
+                        <button class="history" move=${move}>
+                            ${move == this.stepNumber ? "<b>" : ""}
+                            ${desc}
+                            ${move == this.stepNumber ? "</b>" : ""}
+                        </button>
+                    </li>`;})
+            .join("");
 
         this.innerHTML = `
             <div class="game">
@@ -44,13 +77,17 @@ class Game extends HTMLElement {
                 </div>
                 <div class="game-info">
                     <div class="status">${status}</div>
-                    <ol></ol>
+                    <ol>${moves}</ol>
                 </div>
             </div>`
         
         const squares = this.getElementsByTagName("Board-World");
         for (let i=0; i<squares.length; i++)
             squares.item(i).handleClick = (i) => this.handleClick(i);
+
+        const buttons = this.getElementsByClassName("history");
+        for (let i=0; i<buttons.length; i++)
+                buttons.item(i).onclick = () => this.jumpTo(parseInt(buttons.item(i).getAttribute("move")));
     }
 }
 
