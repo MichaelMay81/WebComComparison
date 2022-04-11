@@ -1,45 +1,39 @@
+import {LitElement, html, css} from 'https://cdn.jsdelivr.net/gh/lit/dist@2.2.1/core/lit-core.min.js'
 import {Square} from "./square.js";
 
-export class Board extends HTMLElement {
+export class Board extends LitElement {
     constructor() {
         super();
         this.squares = Array(9).fill("");
-        this.handleclick = null
+        this.handleClick = null
     }
 
-    // == html attributes ==
+    // == class properties / html attributes ==
 
-    static get observedAttributes() {
-        return ['squares'];
-    }
-
-    attributeChangedCallback(property, oldValue, newValue) {
-        if (oldValue === newValue) return;
-
-        if (property == "squares") {
-            this[ property ] = JSON.parse(newValue);
-            this.render();
-        }
-    }
-
-    // == class properties ==
-
-    set handleClick(value) {
-        this.handleclick = value;
-        this.render();
+    static properties = {
+        squares: { type: Array },
+        handleClick: { }
     }
 
     // == html rendering ==
+    
+    static styles = css `
+        .board-row:after {
+            clear: both;
+            content: "";
+            display: table;
+        }
+    `
 
     renderSquare(i) {
-        return `
-            <Square-World
-                value = "${this.squares[i]}">
-            </Square-World>`;
+        return html `
+            <square-world
+                value = "${this.squares[i]}" @click=${() => this.handleClick(i)}>
+            </square-world>`;
     }
 
     render() {
-        this.innerHTML = `
+        return html `
             <div>
                 <div class="board-row">
                     ${this.renderSquare(0)}
@@ -58,13 +52,6 @@ export class Board extends HTMLElement {
                 </div>
             </div>
         `
-        const squares = this.getElementsByTagName("Square-World");
-        for (let i=0; i<squares.length; i++)
-            squares.item(i).handleClick = () => this.handleclick(i);
-    }
-
-    connectedCallback() {
-        this.render();
     }
 }
 
