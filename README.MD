@@ -3,7 +3,8 @@ Basis is a game of [tic-tac-toe](https://reactjs.org/tutorial/tutorial.html) fro
 
 * [Vanilla Web Components](WebComp/)
 * [React](React)
-* [Lit](https://lit.dev/) (TODO)
+* [Lit Javascript](https://lit.dev/)
+* [Lit Typescript](https://lit.dev/) (TODO)
 * [Fable.Lit](https://fable.io/Fable.Lit/) (TODO)
 * [Fable mithril](https://github.com/fable-meiosis/fable-mithril) (TODO)
 * [sutil](https://sutil.dev/) (TODO)
