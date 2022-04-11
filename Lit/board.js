@@ -12,7 +12,7 @@ export class Board extends LitElement {
 
     static properties = {
         squares: { type: Array },
-        handleClick: { }
+        handleClick: { attribute: false }
     }
 
     // == html rendering ==

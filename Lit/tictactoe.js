@@ -1,7 +1,8 @@
+import {LitElement, html, css} from 'https://cdn.jsdelivr.net/gh/lit/dist@2.2.1/core/lit-core.min.js'
 import {Board} from "./board.js";
 import {calculateWinner} from "./helper.js"
 
-class Game extends HTMLElement {
+export class Game extends LitElement {
     constructor() {
         super();
         this.history = [{
@@ -10,6 +11,8 @@ class Game extends HTMLElement {
         this.xIsNext = true;
         this.stepNumber = 0;
     }
+
+    // callbacks
 
     handleClick(i) {
         const history = this.history.slice(0, this.stepNumber + 1);
@@ -27,21 +30,36 @@ class Game extends HTMLElement {
         this.xIsNext = ! this.xIsNext;
         this.stepNumber = history.length;
 
-        this.render();
+        this.requestUpdate();
     }
 
     jumpTo(step) {
         this.stepNumber = step;
         this.xIsNext = (step % 2) === 0;
 
-        this.render();
+        this.requestUpdate();
     }
 
     // == html rendering ==
-
-    connectedCallback() {
-        this.render();
-    }
+    
+    static styles = css `
+        ol, ul {
+        padding-left: 30px;
+      }
+      
+      .status {
+        margin-bottom: 10px;
+      }
+      
+      .game {
+        display: flex;
+        flex-direction: row;
+      }
+      
+      .game-info {
+        margin-left: 20px;
+      }
+    `
 
     render() {
         const current = this.history[this.stepNumber];
@@ -55,39 +73,31 @@ class Game extends HTMLElement {
             this
             .history
             .map((step, move) => {
-                const desc = move
+                var desc = move
                     ? 'Go to move #' + move
                     : 'Go to game start';
-                return `
+                desc = move == this.stepNumber
+                    ? html `<b>${desc}</b>`
+                    : desc
+                return html `
                     <li>
-                        <button class="history" move=${move}>
-                            ${move == this.stepNumber ? "<b>" : ""}
+                        <button class="history" @click=${() => this.jumpTo(move)}>
                             ${desc}
-                            ${move == this.stepNumber ? "</b>" : ""}
                         </button>
                     </li>`;})
-            .join("");
 
-        this.innerHTML = `
+        return html `
             <div class="game">
                 <div class="game-board">
-                    <Board-World
-                        squares=${JSON.stringify(current.squares)}>
-                    </Board-World>
+                    <board-world
+                        squares=${JSON.stringify(current.squares)} .handleClick=${(i) => this.handleClick(i)}>
+                    </board-world>
                 </div>
                 <div class="game-info">
                     <div class="status">${status}</div>
                     <ol>${moves}</ol>
                 </div>
             </div>`
-        
-        const squares = this.getElementsByTagName("Board-World");
-        for (let i=0; i<squares.length; i++)
-            squares.item(i).handleClick = (i) => this.handleClick(i);
-
-        const buttons = this.getElementsByClassName("history");
-        for (let i=0; i<buttons.length; i++)
-                buttons.item(i).onclick = () => this.jumpTo(parseInt(buttons.item(i).getAttribute("move")));
     }
 }
 
