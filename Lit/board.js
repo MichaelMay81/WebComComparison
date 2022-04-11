@@ -28,7 +28,7 @@ export class Board extends LitElement {
     renderSquare(i) {
         return html `
             <square-world
-                value = "${this.squares[i]}" @click=${() => this.handleClick(i)}>
+                value = "${this.squares[i]}" .handleClick=${() => this.handleClick(i)}>
             </square-world>`;
     }
 

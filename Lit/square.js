@@ -11,7 +11,7 @@ export class Square extends LitElement {
 
     static properties = {
         value: { type: String },
-        handleClick: { }
+        handleClick: { attribute: false }
     }
 
     // == html rendering ==
