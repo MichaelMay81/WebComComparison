@@ -1,6 +1,7 @@
-import {LitElement, html, css} from 'lit'
+import {LitElement, html} from 'lit'
 import {customElement, property} from 'lit/decorators.js';
-import "./square.js";
+import {boardStyles} from './css'
+import "./square";
 
 @customElement('board-world')
 export class Board extends LitElement {
@@ -9,22 +10,15 @@ export class Board extends LitElement {
     squares : ("X"|"O")[] = Array(9).fill("");
 
     @property({attribute: false})
-    handleClick? : (i:number)=>void = undefined;
+    onClick? : (i:number)=>void = undefined;
 
-    // == html rendering ==
-    
-    static styles = css `
-        .board-row:after {
-            clear: both;
-            content: "";
-            display: table;
-        }
-    `
+    static styles = boardStyles
 
     renderSquare(i : number) {
         return html `
             <square-world
-                value = "${this.squares[i]}" .handleClick=${ () => this.handleClick ? this.handleClick(i) : undefined }>
+                value = "${this.squares[i]}"
+                .onClick=${ () => this.onClick ? this.onClick(i) : undefined }>
             </square-world>`;
     }
 

@@ -2,7 +2,7 @@ export class Square extends HTMLElement {
     constructor() {
         super();
         this.value = "";
-        this.handleclick = null
+        this.onmyclick = null
     }
 
     // == html attributes ==
@@ -20,8 +20,8 @@ export class Square extends HTMLElement {
 
     // == class properties ==
 
-    set handleClick(value) {
-        this.handleclick = value;
+    set onMyClick(value) {
+        this.onmyclick = value;
         this.render();
     }
 
@@ -37,11 +37,11 @@ export class Square extends HTMLElement {
                 ${this.value}
             </button>
         `
-        if (this.handleclick)
+        if (this.onmyclick)
             this
             .getElementsByClassName("square")
             .item(0)
-            .onclick = this.handleclick;
+            .onclick = this.onmyclick;
     }
 }
 

@@ -1,34 +1,26 @@
 import {LitElement, html, css} from 'https://cdn.jsdelivr.net/gh/lit/dist@2.2.1/core/lit-core.min.js'
-import {Square} from "./square.js";
+import {boardStyles} from './css.js'
+import "./square.js";
 
 export class Board extends LitElement {
     constructor() {
         super();
         this.squares = Array(9).fill("");
-        this.handleClick = null
+        this.onClick = null
     }
-
-    // == class properties / html attributes ==
 
     static properties = {
         squares: { type: Array },
-        handleClick: { attribute: false }
+        onClick: { attribute: false }
     }
 
-    // == html rendering ==
-    
-    static styles = css `
-        .board-row:after {
-            clear: both;
-            content: "";
-            display: table;
-        }
-    `
+    static styles = boardStyles
 
     renderSquare(i) {
         return html `
             <square-world
-                value = "${this.squares[i]}" .handleClick=${() => this.handleClick(i)}>
+                value = "${this.squares[i]}"
+                .onClick=${() => this.onClick(i)}>
             </square-world>`;
     }
 

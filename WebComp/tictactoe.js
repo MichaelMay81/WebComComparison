@@ -1,5 +1,5 @@
-import {Board} from "./board.js";
 import {calculateWinner} from "./helper.js"
+import "./board.js";
 
 class Game extends HTMLElement {
     constructor() {
@@ -83,7 +83,7 @@ class Game extends HTMLElement {
         
         const squares = this.getElementsByTagName("Board-World");
         for (let i=0; i<squares.length; i++)
-            squares.item(i).handleClick = (i) => this.handleClick(i);
+            squares.item(i).onMyClick = (i) => this.handleClick(i);
 
         const buttons = this.getElementsByClassName("history");
         for (let i=0; i<buttons.length; i++)

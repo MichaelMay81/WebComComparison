@@ -1,6 +1,7 @@
 import {LitElement, html, css} from 'https://cdn.jsdelivr.net/gh/lit/dist@2.2.1/core/lit-core.min.js'
-import {Board} from "./board.js";
 import {calculateWinner} from "./helper.js"
+import { tictactoeStyles } from './css.js';
+import "./board.js";
 
 export class Game extends LitElement {
     constructor() {
@@ -42,24 +43,7 @@ export class Game extends LitElement {
 
     // == html rendering ==
     
-    static styles = css `
-        ol, ul {
-        padding-left: 30px;
-      }
-      
-      .status {
-        margin-bottom: 10px;
-      }
-      
-      .game {
-        display: flex;
-        flex-direction: row;
-      }
-      
-      .game-info {
-        margin-left: 20px;
-      }
-    `
+    static styles = tictactoeStyles
 
     render() {
         const current = this.history[this.stepNumber];
@@ -90,7 +74,7 @@ export class Game extends LitElement {
             <div class="game">
                 <div class="game-board">
                     <board-world
-                        squares=${JSON.stringify(current.squares)} .handleClick=${(i) => this.handleClick(i)}>
+                        squares=${JSON.stringify(current.squares)} .onClick=${(i) => this.handleClick(i)}>
                     </board-world>
                 </div>
                 <div class="game-info">

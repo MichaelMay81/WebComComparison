@@ -1,10 +1,10 @@
-import {Square} from "./square.js";
+import "./square.js";
 
 export class Board extends HTMLElement {
     constructor() {
         super();
         this.squares = Array(9).fill("");
-        this.handleclick = null
+        this.onmyclick = null
     }
 
     // == html attributes ==
@@ -24,8 +24,8 @@ export class Board extends HTMLElement {
 
     // == class properties ==
 
-    set handleClick(value) {
-        this.handleclick = value;
+    set onMyClick(value) {
+        this.onmyclick = value;
         this.render();
     }
 
@@ -60,7 +60,7 @@ export class Board extends HTMLElement {
         `
         const squares = this.getElementsByTagName("Square-World");
         for (let i=0; i<squares.length; i++)
-            squares.item(i).handleClick = () => this.handleclick(i);
+            squares.item(i).onMyClick = () => this.onmyclick(i);
     }
 
     connectedCallback() {
