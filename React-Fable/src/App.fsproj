@@ -4,6 +4,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Square.fs" />
+    <Compile Include="Board.fs" />
     <Compile Include="App.fs" />
   </ItemGroup>
   <ItemGroup>

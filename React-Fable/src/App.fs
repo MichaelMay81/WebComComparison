@@ -3,28 +3,58 @@ module App
 open Browser.Dom
 open Fable.Core
 open Feliz
-open Square
+open Board
 
 let [<Global("calculateWinner")>] calculateWinner(squares: string []): string option = jsNative
 
 [<ReactComponent>]
-let Board() =
-    let (squares, setSquares) = React.useState(List.replicate 9 "")
+let Game() =
+    let (history, setHistory) = React.useState([ {| Squares = List.replicate 9 "" |} ])
     let (xIsNext, setXisNext) = React.useState(true)
-
-    let winner = calculateWinner(squares |> List.toArray)
+    let (stepNumber, setStepNumber) = React.useState(0)
 
     let handleClick i =
-        match winner, (squares |> List.item i) with
+        let history =
+            history
+            |> List.skip ((history |> List.length) - (stepNumber+1))
+        let current = history |> List.head
+        let winner = calculateWinner(current.Squares |> List.toArray)
+
+        match winner, (current.Squares |> List.item i) with
         | None, "" ->
-            setSquares (squares |> List.updateAt i (if xIsNext then "X" else "O"))
+            
+            let squares =
+                current.Squares
+                |> List.updateAt i (if xIsNext then "X" else "O")
+            setHistory ({| Squares = squares |} :: history)
             setXisNext (not xIsNext)
+            setStepNumber (stepNumber + 1)
         | _, _ -> ()
 
-    let renderSquare (i) =
-        Square
-            (squares |> List.item i)
-            (fun _ -> handleClick i)
+    let jumpTo step =
+        setStepNumber step
+        setXisNext ((step % 2) = 0)
+
+    let moves =
+        history |> List.mapi (fun i _ -> 
+            let desc =
+                match i with
+                | 0 -> "Go to game start"
+                | _ -> $"Go to move #{i}"
+            Html.li [
+                prop.children [
+                    Html.button [
+                        prop.onClick (fun _ -> jumpTo(i))
+                        prop.children [
+                            Html.text desc
+                        ]
+                    ]
+                ]
+            ]
+        )
+
+    let current = history |> List.item ((history |> List.length) - (stepNumber+1))
+    let winner = calculateWinner(current.Squares |> List.toArray)
 
     let status =
         match winner with
@@ -34,50 +64,18 @@ let Board() =
             $"""Next player: {if xIsNext then "X" else "O"}"""
 
     Html.div [
-        Html.div [
-            prop.className "status"
-            prop.children [ Html.text status ]
-        ]
-        Html.div [
-            prop.className "board-row"
-            prop.children [
-                renderSquare 0
-                renderSquare 1
-                renderSquare 2
-            ]
-        ]
-        Html.div [
-            prop.className "board-row"
-            prop.children [
-                renderSquare 3
-                renderSquare 4
-                renderSquare 5
-            ]
-        ]
-        Html.div [
-            prop.className "board-row"
-            prop.children [
-                renderSquare 6
-                renderSquare 7
-                renderSquare 8
-            ]
-        ]
-    ]
-
-[<ReactComponent>]
-let Game() =
-    Html.div [
         prop.className "game"
         prop.children [
             Html.div [
                 prop.className "game-board"
-                prop.children [ Board () ]
+                prop.children [
+                    Board current.Squares handleClick ]
             ]
             Html.div [
                 prop.className "game-info"
                 prop.children [
-                    Html.div [ Html.text "status" ]
-                    Html.ol [ Html.text "TODO" ]
+                    Html.div [ Html.text status ]
+                    Html.ol [ prop.children moves ]
                 ]
             ]
         ]
