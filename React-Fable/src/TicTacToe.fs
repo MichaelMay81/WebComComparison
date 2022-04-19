@@ -1,4 +1,4 @@
-module App
+module TicTacToe
 
 open Browser.Dom
 open Fable.Core

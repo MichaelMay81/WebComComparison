@@ -5,7 +5,7 @@
   <ItemGroup>
     <Compile Include="Square.fs" />
     <Compile Include="Board.fs" />
-    <Compile Include="App.fs" />
+    <Compile Include="TicTacToe.fs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Fable.Browser.Dom" Version="2.10.0" />
