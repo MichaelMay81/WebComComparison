@@ -7,6 +7,7 @@ Basis is a game of [tic-tac-toe](https://reactjs.org/tutorial/tutorial.html) fro
 * [Lit Typescript](Lit-TS)
     * npm install
     * npm run dev
+* [React Fable(Feliz)](React-Fable)
 * [Fable.Lit](https://fable.io/Fable.Lit/) (TODO)
 * [Fable mithril](https://github.com/fable-meiosis/fable-mithril) (TODO)
 * [sutil](https://sutil.dev/) (TODO)
