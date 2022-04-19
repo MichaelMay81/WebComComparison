@@ -1,39 +1,37 @@
 module App
 
 open Browser.Dom
+open Fable.Core
 open Feliz
+open Square
 
-// // Mutable variable to count the number of times we clicked the button
-// let mutable count = 0
-
-// // Get a reference to our button and cast the Element to an HTMLButtonElement
-// let myButton =
-//     document.querySelector (".my-button") :?> Browser.Types.HTMLButtonElement
-
-// // Register our listener
-// myButton.onclick <-
-//     fun _ ->
-//         count <- count + 1
-        // myButton.innerText <- sprintf "You clicked: %i time(s)" count
-
-// [<ReactComponent>]
-// let Counter() =
-//     let (count, setCount) = React.useState(0)
-//     Html.div [
-//         Html.h1 count
-//         Html.button [
-//             prop.text "Increment"
-//             prop.onClick (fun _ -> setCount(count + 1))
-//         ]
-//     ]
-
-[<ReactComponent>]
-let Square() = Html.button [ prop.className "square"]
+let [<Global("calculateWinner")>] calculateWinner(squares: string []): string option = jsNative
 
 [<ReactComponent>]
 let Board() =
-    let renderSquare (i) = Square ()
-    let status = "Next player: X"
+    let (squares, setSquares) = React.useState(List.replicate 9 "")
+    let (xIsNext, setXisNext) = React.useState(true)
+
+    let winner = calculateWinner(squares |> List.toArray)
+
+    let handleClick i =
+        match winner, (squares |> List.item i) with
+        | None, "" ->
+            setSquares (squares |> List.updateAt i (if xIsNext then "X" else "O"))
+            setXisNext (not xIsNext)
+        | _, _ -> ()
+
+    let renderSquare (i) =
+        Square
+            (squares |> List.item i)
+            (fun _ -> handleClick i)
+
+    let status =
+        match winner with
+        | Some winner ->
+            $"Winner: {winner}"
+        | None ->
+            $"""Next player: {if xIsNext then "X" else "O"}"""
 
     Html.div [
         Html.div [
@@ -43,25 +41,25 @@ let Board() =
         Html.div [
             prop.className "board-row"
             prop.children [
-                renderSquare (0)
-                renderSquare (1)
-                renderSquare (2)
+                renderSquare 0
+                renderSquare 1
+                renderSquare 2
             ]
         ]
         Html.div [
             prop.className "board-row"
             prop.children [
-                renderSquare (3)
-                renderSquare (4)
-                renderSquare (5)
+                renderSquare 3
+                renderSquare 4
+                renderSquare 5
             ]
         ]
         Html.div [
             prop.className "board-row"
             prop.children [
-                renderSquare (6)
-                renderSquare (7)
-                renderSquare (8)
+                renderSquare 6
+                renderSquare 7
+                renderSquare 8
             ]
         ]
     ]
