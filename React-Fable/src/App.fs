@@ -16,13 +16,16 @@ let Game() =
     let handleClick i =
         let history =
             history
-            |> List.skip ((history |> List.length) - (stepNumber+1))
-        let current = history |> List.head
+            |> List.rev
+            |> List.take (stepNumber+1)
+            |> List.rev
+        let current =
+            history
+            |> List.head
         let winner = calculateWinner(current.Squares |> List.toArray)
 
         match winner, (current.Squares |> List.item i) with
         | None, "" ->
-            
             let squares =
                 current.Squares
                 |> List.updateAt i (if xIsNext then "X" else "O")
@@ -36,24 +39,24 @@ let Game() =
         setXisNext ((step % 2) = 0)
 
     let moves =
-        history |> List.mapi (fun i _ -> 
-            let desc =
-                match i with
-                | 0 -> "Go to game start"
-                | _ -> $"Go to move #{i}"
-            Html.li [
-                prop.children [
-                    Html.button [
-                        prop.onClick (fun _ -> jumpTo(i))
-                        prop.children [
-                            Html.text desc
-                        ]
-                    ]
-                ]
-            ]
-        )
+        history
+        |> List.mapi (
+            fun i _ -> 
+                let desc =
+                    match i with
+                    | 0 -> "Go to game start"
+                    | _ -> $"Go to move #{i}"
+                Html.li [
+                    prop.children [
+                        Html.button [
+                            prop.onClick (fun _ -> jumpTo(i))
+                            prop.children [
+                                Html.text desc ]]]] )
 
-    let current = history |> List.item ((history |> List.length) - (stepNumber+1))
+    let current =
+        history
+        |> List.rev
+        |> List.item stepNumber
     let winner = calculateWinner(current.Squares |> List.toArray)
 
     let status =
@@ -69,16 +72,11 @@ let Game() =
             Html.div [
                 prop.className "game-board"
                 prop.children [
-                    Board current.Squares handleClick ]
-            ]
+                    Board current.Squares handleClick ]]
             Html.div [
                 prop.className "game-info"
                 prop.children [
                     Html.div [ Html.text status ]
-                    Html.ol [ prop.children moves ]
-                ]
-            ]
-        ]
-    ]
+                    Html.ol [ prop.children moves ]]]]]
 
 ReactDOM.render(Game(), document.getElementById "root")
